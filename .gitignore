@@ -17,3 +17,6 @@ project.private.config.json
 
 # Temp
 *.tmp
+
+# SSH Keys
+.ssh/
