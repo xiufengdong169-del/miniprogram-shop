@@ -4,7 +4,7 @@
     <image
       class="product-image"
       src="{{product.cardImage || product.localImage || product.image || '/images/placeholder.png'}}"
-      mode="aspectFill"
+      mode="widthFix"
       lazy-load
     />
     <view wx:if="{{product.isFree}}" class="product-badge free">免费</view>
