@@ -4,7 +4,7 @@ const app = getApp()
 Page({
   data: {
     banner: '/images/banner.png',
-    categories: ['全部', '引流产品', '低价测评', '深度测评', '登记服务', '合规服务', '订阅服务', '入表服务', '融资服务'],
+    categories: ['全部', '免费速测', '数据体检', '入表潜力测算', '数据产权登记', '数据合规包', '企业数字名片', '入表实施', '融资对接'],
     activeCategory: '全部',
     products: [],
     loading: true,
