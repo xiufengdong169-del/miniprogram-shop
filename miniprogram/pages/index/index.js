@@ -32,8 +32,16 @@ Page({
       }
     }).then(res => {
       if (res.result && res.result.code === 0) {
+        let products = res.result.data || []
+        // 云数据库返回空时，fallback 到本地数据（通常是云数据库未初始化或分类未同步）
+        if (products.length === 0) {
+          products = this.getLocalProducts()
+          if (products.length > 0) {
+            console.warn('[首页] 云数据库未返回商品，已使用本地兜底数据')
+          }
+        }
         this.setData({
-          products: res.result.data,
+          products,
           loading: false
         })
       } else {
@@ -49,15 +57,20 @@ Page({
     })
   },
 
-  // 本地模拟数据（开发阶段使用）
-  loadLocalProducts() {
+  // 获取本地过滤后的商品数据
+  getLocalProducts() {
     const products = require('../../data/products.js')
     let filtered = products.filter(p => p.onShelf)
     if (this.data.activeCategory !== '全部') {
       filtered = filtered.filter(p => p.category === this.data.activeCategory)
     }
     filtered.sort((a, b) => a.sortOrder - b.sortOrder)
-    this.setData({ products: filtered, loading: false })
+    return filtered
+  },
+
+  // 本地模拟数据（开发阶段使用）
+  loadLocalProducts() {
+    this.setData({ products: this.getLocalProducts(), loading: false })
   },
 
   // 切换分类
