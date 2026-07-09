@@ -1,0 +1,86 @@
+<!-- pages/cart/cart.wxml -->
+<view class="page">
+  <!-- 购物车列表 -->
+  <block wx:if="{{cartItems.length > 0}}">
+    <view class="cart-list">
+      <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
+        <!-- 选中框 -->
+        <view
+          class="check-box {{selectedIds.indexOf(item.id) > -1 ? 'checked' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onToggleSelect"
+        >
+          <text wx:if="{{selectedIds.indexOf(item.id) > -1}}" class="check-icon">✓</text>
+        </view>
+
+        <!-- 商品图 -->
+        <image
+          class="item-image"
+          src="{{item.image || '/images/placeholder.png'}}"
+          mode="aspectFill"
+        />
+
+        <!-- 商品信息 -->
+        <view class="item-info">
+          <view class="item-name text-ellipsis-2">{{item.name}}</view>
+          <view wx:if="{{item.variantName}}" class="item-variant">{{item.variantName}}</view>
+          <view class="item-bottom">
+            <view class="item-price">
+              <block wx:if="{{item.price === 0}}">
+                <text class="free-text">免费</text>
+              </block>
+              <block wx:else>
+                <text class="price-symbol">¥</text>
+                <text class="price-value">{{item.price / 100}}</text>
+              </block>
+            </view>
+            <view class="quantity-control">
+              <view class="qty-btn" data-id="{{item.id}}" bindtap="onDecrease">
+                <text>−</text>
+              </view>
+              <view class="qty-num">{{item.quantity}}</view>
+              <view class="qty-btn" data-id="{{item.id}}" bindtap="onIncrease">
+                <text>+</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 删除按钮 -->
+        <view class="item-delete" data-id="{{item.id}}" bindtap="onRemove">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部结算栏 -->
+    <view class="checkout-bar">
+      <view class="check-all" bindtap="onToggleAll">
+        <view class="check-box {{isAllSelected ? 'checked' : ''}}">
+          <text wx:if="{{isAllSelected}}" class="check-icon">✓</text>
+        </view>
+        <text class="check-all-text">全选</text>
+      </view>
+      <view class="total-info">
+        <text class="total-label">合计：</text>
+        <text class="price-symbol">¥</text>
+        <text class="total-amount">{{totalAmount / 100}}</text>
+      </view>
+      <view class="checkout-btn" bindtap="onCheckout">
+        <text>结算{{totalCount > 0 ? '(' + totalCount + ')' : ''}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空购物车 -->
+  <view wx:else class="empty-cart">
+    <text class="empty-icon">🛒</text>
+    <text class="empty-text">购物车空空如也</text>
+    <view class="empty-btn" bindtap="goShopping">
+      <text>去逛逛</text>
+    </view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view wx:if="{{cartItems.length > 0}}" style="height: 120rpx;"></view>
+</view>

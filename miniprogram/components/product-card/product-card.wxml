@@ -1,0 +1,38 @@
+<!-- components/product-card/product-card.wxml -->
+<view class="product-card" bindtap="onTap">
+  <view class="product-image-wrap">
+    <image
+      class="product-image"
+      src="{{product.localImage || product.image || '/images/placeholder.png'}}"
+      mode="aspectFill"
+      lazy-load
+    />
+    <view wx:if="{{product.isFree}}" class="product-badge free">免费</view>
+    <view wx:elif="{{product.tags.length > 0 && product.tags[0] === '爆款'}}" class="product-badge hot">爆款</view>
+  </view>
+
+  <view class="product-info">
+    <view class="product-name text-ellipsis-2">{{product.name}}</view>
+    <view class="product-subtitle text-ellipsis">{{product.shortTitle}}</view>
+
+    <view class="product-tags" wx:if="{{product.tags && product.tags.length > 0}}">
+      <text wx:for="{{product.tags}}" wx:key="*this" class="product-tag">{{item}}</text>
+    </view>
+
+    <view class="product-bottom">
+      <view class="product-price-wrap">
+        <block wx:if="{{product.isFree}}">
+          <text class="product-price free-text">免费</text>
+        </block>
+        <block wx:else>
+          <text class="price-symbol">¥</text>
+          <text class="price-value">{{product.price / 100}}</text>
+          <text wx:if="{{product.originalPrice > 0}}" class="price-original">¥{{product.originalPrice / 100}}</text>
+        </block>
+      </view>
+      <view class="product-action">
+        <text class="action-text">{{product.buttonText || '立即购买'}}</text>
+      </view>
+    </view>
+  </view>
+</view>

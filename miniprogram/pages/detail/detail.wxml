@@ -1,0 +1,158 @@
+<!-- pages/detail/detail.wxml -->
+<view class="page" wx:if="{{!loading && product}}">
+  <!-- 商品主图 -->
+  <view class="product-hero">
+    <image
+      class="hero-image"
+      src="{{product.localImage || product.image || '/images/placeholder.png'}}"
+      mode="aspectFill"
+      bindtap="onImagePreview"
+    />
+    <view class="hero-tags" wx:if="{{product.tags && product.tags.length > 0}}">
+      <text wx:for="{{product.tags}}" wx:key="*this" class="hero-tag">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 价格区域 -->
+  <view class="price-section">
+    <view class="price-row">
+      <block wx:if="{{product.isFree}}">
+        <text class="big-price free">免费</text>
+      </block>
+      <block wx:else>
+        <text class="price-symbol">¥</text>
+        <text class="big-price">{{product.price / 100}}</text>
+        <text wx:if="{{product.originalPrice > 0}}" class="original-price">¥{{product.originalPrice / 100}}</text>
+      </block>
+    </view>
+    <view class="product-title">{{product.name}}</view>
+    <view class="product-subtitle">{{product.subtitle}}</view>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="section" wx:if="{{product.variants && product.variants.length > 0}}">
+    <view class="section-title">选择规格</view>
+    <view class="variant-list">
+      <view
+        class="variant-item {{selectedVariantIndex === index ? 'active' : ''}}"
+        wx:for="{{product.variants}}"
+        wx:key="name"
+        data-index="{{index}}"
+        bindtap="onVariantTap"
+      >
+        <view class="variant-name">{{item.name}}</view>
+        <view class="variant-price">¥{{item.price / 100}}</view>
+        <view class="variant-desc">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务说明 -->
+  <view class="section">
+    <view class="section-title">服务说明</view>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-label">交付周期</text>
+        <text class="info-value">{{product.deliveryTime}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">交付方式</text>
+        <text class="info-value">{{product.deliveryMethod}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">适合客户</text>
+        <text class="info-value">{{product.suitableFor}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">需要准备</text>
+        <text class="info-value">{{product.needPrepare}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">支持开票</text>
+        <text class="info-value">{{product.supportInvoice ? '是' : '否'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务包含 -->
+  <view class="section">
+    <view class="section-title">服务包含</view>
+    <view class="section-content">{{product.serviceIncludes}}</view>
+  </view>
+
+  <!-- 商品详情 -->
+  <view class="section">
+    <view class="section-title">商品详情</view>
+    <view class="section-content">{{product.description}}</view>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="section" wx:if="{{product.faq}}">
+    <view class="section-title">常见问题</view>
+    <view class="section-content faq">{{product.faq}}</view>
+  </view>
+
+  <!-- 合规提示 -->
+  <view class="section notice" wx:if="{{product.complianceNote}}">
+    <view class="section-title">合规提示</view>
+    <view class="section-content notice-text">{{product.complianceNote}}</view>
+  </view>
+
+  <!-- 退款政策 -->
+  <view class="section" wx:if="{{product.refundPolicy}}">
+    <view class="section-title">退款说明</view>
+    <view class="section-content">{{product.refundPolicy}}</view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view style="height: 140rpx;"></view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="bar-icon" bindtap="goToCart">
+      <view class="icon-badge-wrap">
+        <text class="bar-icon-text">🛒</text>
+        <view wx:if="{{cartCount > 0}}" class="cart-badge">{{cartCount}}</view>
+      </view>
+      <text class="bar-icon-label">购物车</text>
+    </view>
+    <view class="bar-btn cart-btn" bindtap="onAddToCart">
+      <text>加入购物车</text>
+    </view>
+    <view class="bar-btn buy-btn" bindtap="onBuyNow">
+      <text>{{product.buttonText || '立即购买'}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view wx:if="{{loading}}" class="loading-state">
+  <view class="loading-spinner"></view>
+  <text>加载中...</text>
+</view>
+
+<!-- 规格选择弹窗 -->
+<view wx:if="{{showVariantPopup}}" class="popup-mask" bindtap="onPopupClose">
+  <view class="popup-content" catchtap="">
+    <view class="popup-header">
+      <text>选择规格</text>
+      <text class="popup-close" bindtap="onPopupClose">✕</text>
+    </view>
+    <view class="popup-variants">
+      <view
+        class="popup-variant {{selectedVariantIndex === index ? 'active' : ''}}"
+        wx:for="{{product.variants}}"
+        wx:key="name"
+        data-index="{{index}}"
+        bindtap="onVariantTap"
+      >
+        <view class="pv-name">{{item.name}}</view>
+        <view class="pv-desc">{{item.desc}}</view>
+        <view class="pv-price">¥{{item.price / 100}}</view>
+      </view>
+    </view>
+    <view class="popup-btn" bindtap="onPopupConfirm">
+      <text>确认</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,96 @@
+<!-- pages/profile/profile.wxml -->
+<view class="page">
+  <!-- 用户信息头部 -->
+  <view class="user-header">
+    <view class="user-info" wx:if="{{hasUserInfo}}">
+      <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/tab/profile.png'}}" mode="aspectFill" />
+      <view class="user-detail">
+        <text class="user-name">{{userInfo.nickName}}</text>
+        <text class="user-id">ID: {{openid}}</text>
+      </view>
+    </view>
+    <view class="user-info" wx:else>
+      <view class="user-avatar default-avatar">
+        <text>👤</text>
+      </view>
+      <view class="user-detail">
+        <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
+          点击登录
+        </button>
+        <text class="user-id">登录后享受更多服务</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单状态 -->
+  <view class="order-section">
+    <view class="section-header" bindtap="onMenuTap" data-type="orders">
+      <text class="section-title">我的订单</text>
+      <text class="section-more">查看全部 ›</text>
+    </view>
+    <view class="order-status-grid">
+      <view class="status-item" data-status="0" bindtap="onOrderTab">
+        <view class="status-icon-wrap">
+          <text class="status-icon">⏰</text>
+          <view wx:if="{{orderStats.pending > 0}}" class="status-badge">{{orderStats.pending}}</view>
+        </view>
+        <text class="status-label">待支付</text>
+      </view>
+      <view class="status-item" data-status="1" bindtap="onOrderTab">
+        <view class="status-icon-wrap">
+          <text class="status-icon">✅</text>
+          <view wx:if="{{orderStats.paid > 0}}" class="status-badge">{{orderStats.paid}}</view>
+        </view>
+        <text class="status-label">已支付</text>
+      </view>
+      <view class="status-item" data-status="2" bindtap="onOrderTab">
+        <view class="status-icon-wrap">
+          <text class="status-icon">🔄</text>
+          <view wx:if="{{orderStats.service > 0}}" class="status-badge">{{orderStats.service}}</view>
+        </view>
+        <text class="status-label">服务中</text>
+      </view>
+      <view class="status-item" data-status="3" bindtap="onOrderTab">
+        <view class="status-icon-wrap">
+          <text class="status-icon">📦</text>
+        </view>
+        <text class="status-label">已完成</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item" bindtap="onMenuTap" data-type="cart">
+      <text class="menu-icon">🛒</text>
+      <text class="menu-text">我的购物车</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-type="invoice">
+      <text class="menu-icon">🧾</text>
+      <text class="menu-text">发票管理</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-type="contact">
+      <text class="menu-icon">💬</text>
+      <text class="menu-text">联系客服</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-type="about">
+      <text class="menu-icon">🏢</text>
+      <text class="menu-text">关于数乘科技</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-type="privacy">
+      <text class="menu-icon">🔒</text>
+      <text class="menu-text">隐私政策</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 底部信息 -->
+  <view class="footer-info">
+    <text class="footer-text">数乘科技 · 数据资产服务商</text>
+    <text class="footer-version">v1.0.0</text>
+  </view>
+</view>

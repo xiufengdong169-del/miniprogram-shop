@@ -1,0 +1,46 @@
+<!-- pages/index/index.wxml -->
+<view class="page">
+  <!-- 顶部Banner -->
+  <view class="banner-wrap">
+    <image class="banner" src="{{banner}}" mode="widthFix" />
+  </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view class="category-bar" scroll-x enhanced show-scrollbar="{{false}}">
+    <view
+      class="category-item {{activeCategory === item ? 'active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="*this"
+      data-category="{{item}}"
+      bindtap="onCategoryTap"
+    >
+      <text>{{item}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 商品列表 -->
+  <view class="product-list">
+    <block wx:if="{{!loading && products.length > 0}}">
+      <product-card
+        wx:for="{{products}}"
+        wx:key="_id"
+        product="{{item}}"
+      />
+    </block>
+
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && products.length === 0}}" class="empty-state">
+      <text class="empty-icon">📦</text>
+      <text>暂无商品</text>
+    </view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view style="height: 40rpx;"></view>
+</view>

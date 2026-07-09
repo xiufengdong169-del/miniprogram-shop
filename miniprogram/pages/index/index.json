@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "product-card": "/components/product-card/product-card"
+  },
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "数乘科技·数据服务商城"
+}
