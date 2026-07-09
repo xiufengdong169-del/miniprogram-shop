@@ -116,10 +116,10 @@
       </view>
       <text class="bar-icon-label">购物车</text>
     </view>
-    <view class="bar-btn cart-btn" bindtap="onAddToCart">
+    <view class="bar-btn cart-btn" hover-class="btn-hover" hover-stay-time="100" bindtap="onAddToCart">
       <text>加入购物车</text>
     </view>
-    <view class="bar-btn buy-btn" bindtap="onBuyNow">
+    <view class="bar-btn buy-btn" hover-class="btn-hover" hover-stay-time="100" bindtap="onBuyNow">
       <text>{{product.buttonText || '立即购买'}}</text>
     </view>
   </view>

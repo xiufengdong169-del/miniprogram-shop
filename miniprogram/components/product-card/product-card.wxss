@@ -7,6 +7,12 @@
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
 }
 
+.card-hover {
+  opacity: 0.9;
+  transform: scale(0.98);
+  transition: all 0.1s;
+}
+
 .product-image-wrap {
   position: relative;
   width: 100%;
@@ -115,6 +121,13 @@
   font-size: 24rpx;
   padding: 10rpx 28rpx;
   border-radius: 32rpx;
+  active-background: #1d4ed8;
+}
+
+.product-action:active {
+  background: #1d4ed8;
+  transform: scale(0.95);
+  transition: all 0.1s;
 }
 
 .action-text {

@@ -254,9 +254,26 @@
   color: #fff;
 }
 
+.cart-btn:active {
+  background: #e68500;
+  transform: scale(0.97);
+  transition: all 0.1s;
+}
+
 .buy-btn {
   background: #2563eb;
   color: #fff;
+}
+
+.buy-btn:active {
+  background: #1d4ed8;
+  transform: scale(0.97);
+  transition: all 0.1s;
+}
+
+.btn-hover {
+  opacity: 0.8;
+  transform: scale(0.97);
 }
 
 /* 加载状态 */

@@ -1,5 +1,5 @@
 <!-- components/product-card/product-card.wxml -->
-<view class="product-card" bindtap="onTap">
+<view class="product-card" hover-class="card-hover" hover-stay-time="100" bindtap="onTap">
   <view class="product-image-wrap">
     <image
       class="product-image"
@@ -30,7 +30,7 @@
           <text wx:if="{{product.originalPrice > 0}}" class="price-original">¥{{product.originalPrice / 100}}</text>
         </block>
       </view>
-      <view class="product-action">
+      <view class="product-action" catchtap="onActionTap">
         <text class="action-text">{{product.buttonText || '立即购买'}}</text>
       </view>
     </view>
