@@ -4,7 +4,7 @@ App({
     userInfo: null,
     openid: null,
     cart: [], // 购物车数据
-    cloudEnv: 'shucheng-mall' // 云开发环境ID，部署时替换为实际环境ID
+    cloudEnv: 'cloudbase-d7gc2b32cd4196059' // 云开发环境ID
   },
 
   onLaunch: function () {
