@@ -25,14 +25,15 @@ exports.main = async (event, context) => {
     try {
       const existing = await db.collection('products').where({ _id: product._id }).get()
       if (existing.data && existing.data.length > 0) {
-        // 已存在，更新
-        await db.collection('products').doc(product._id).update({
+        // 已存在，更新（云数据库不允许更新 _id，需先剔除）
+        const { _id, ...updateData } = product
+        await db.collection('products').doc(_id).update({
           data: {
-            ...product,
+            ...updateData,
             updateTime: db.serverDate()
           }
         })
-        results.products.push({ id: product._id, status: 'updated' })
+        results.products.push({ id: _id, status: 'updated' })
       } else {
         // 不存在，新增
         await db.collection('products').add({
