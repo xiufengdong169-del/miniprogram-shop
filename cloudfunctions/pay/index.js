@@ -14,7 +14,7 @@ const CONFIG = {
   // 商户号
   mch_id: '1114910204',
   // 商户API密钥（v2密钥，32位，部署时替换）
-  api_key: 'YOUR_MCH_API_KEY_32_CHARS_LONG_xxxx',
+  api_key: '13318876505Zonken188198045899999',
   // 支付回调云函数路径
   notify_url: 'https://shucheng-mall.xxxx/payNotify',
   // 交易类型

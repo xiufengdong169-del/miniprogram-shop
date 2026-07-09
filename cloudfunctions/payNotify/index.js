@@ -7,7 +7,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
 // 商户API密钥（与pay云函数一致，部署时替换）
-const API_KEY = 'YOUR_MCH_API_KEY_32_CHARS_LONG_xxxx'
+const API_KEY = '13318876505Zonken188198045899999'
 
 /**
  * 验证签名
