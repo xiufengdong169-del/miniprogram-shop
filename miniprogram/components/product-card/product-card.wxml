@@ -3,7 +3,7 @@
   <view class="product-image-wrap">
     <image
       class="product-image"
-      src="{{product.localImage || product.image || '/images/placeholder.png'}}"
+      src="{{product.cardImage || product.localImage || product.image || '/images/placeholder.png'}}"
       mode="aspectFill"
       lazy-load
     />
