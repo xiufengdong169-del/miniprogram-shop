@@ -20,13 +20,12 @@ exports.main = async (event, context) => {
     }
   }
 
-  // 2. 写入商品数据
+  // 2. 写入商品数据（使用 _id 查询，存在则更新，不存在则新增）
   for (const product of products) {
     try {
-      // 先尝试查询是否已存在
-      const existing = await db.collection('products').doc(product._id).get()
-      if (existing.data) {
-        // 更新
+      const existing = await db.collection('products').where({ _id: product._id }).get()
+      if (existing.data && existing.data.length > 0) {
+        // 已存在，更新
         await db.collection('products').doc(product._id).update({
           data: {
             ...product,
@@ -34,17 +33,20 @@ exports.main = async (event, context) => {
           }
         })
         results.products.push({ id: product._id, status: 'updated' })
+      } else {
+        // 不存在，新增
+        await db.collection('products').add({
+          data: {
+            ...product,
+            createTime: db.serverDate(),
+            updateTime: db.serverDate()
+          }
+        })
+        results.products.push({ id: product._id, status: 'added' })
       }
     } catch (e) {
-      // 不存在，新增
-      await db.collection('products').add({
-        data: {
-          ...product,
-          createTime: db.serverDate(),
-          updateTime: db.serverDate()
-        }
-      })
-      results.products.push({ id: product._id, status: 'added' })
+      console.error(`商品 ${product._id} 初始化失败:`, e)
+      results.products.push({ id: product._id, status: 'failed', error: e.message })
     }
   }
 
