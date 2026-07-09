@@ -16,7 +16,7 @@ const CONFIG = {
   // 商户API密钥（v2密钥，32位，部署时替换）
   api_key: '13318876505Zonken188198045899999',
   // 支付回调云函数路径
-  notify_url: 'https://shucheng-mall.xxxx/payNotify',
+  notify_url: 'https://cloudbase-d7gc2b32cd4196059-1451883116.ap-shanghai.app.tcloudbase.com/payNotify',
   // 交易类型
   trade_type: 'JSAPI'
 }
