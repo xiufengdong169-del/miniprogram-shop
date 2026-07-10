@@ -3,6 +3,9 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
+// 使用本地商品数据（与前端 products.js 同步）
+const PRODUCTS = require('./data/products.js')
+
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
@@ -24,9 +27,8 @@ exports.main = async (event, context) => {
     const orderItems = []
 
     for (const item of items) {
-      // 从数据库查询商品信息（防止前端篡改价格）
-      const productRes = await db.collection('products').doc(item.productId).get()
-      const product = productRes.data
+      // 从本地商品数据中查询（不再依赖云数据库 products 集合）
+      const product = PRODUCTS.find(p => p._id === item.productId)
 
       if (!product || !product.onShelf) {
         return { code: -1, message: `商品 ${item.productId} 不存在或已下架` }

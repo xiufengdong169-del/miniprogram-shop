@@ -58,7 +58,7 @@ Page({
       wx.showToast({ title: '正在跳转服务...', icon: 'success' })
       setTimeout(() => {
         wx.navigateTo({
-          url: `/pages/order/order?mode=direct&productId=${product._id}`
+          url: `/pages/checkout/checkout?mode=direct&productId=${product._id}`
         })
       }, 1000)
       return
@@ -73,8 +73,26 @@ Page({
 
   // 立即购买
   onBuyNow() {
+    console.log('[detail] onBuyNow clicked')
     const product = this.data.product
-    if (!product) return
+    console.log('[detail] product:', product)
+    if (!product) {
+      console.log('[detail] product is null, return')
+      return
+    }
+
+    if (product.isFree) {
+      console.log('[detail] isFree, direct navigate')
+      wx.showToast({ title: '正在跳转服务...', icon: 'success' })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `/pages/checkout/checkout?mode=direct&productId=${product._id}`,
+          success: () => console.log('[detail] navigate success'),
+          fail: (err) => console.error('[detail] navigate fail:', err)
+        })
+      }, 500)
+      return
+    }
 
     if (product.variants && product.variants.length > 0) {
       this.setData({ showVariantPopup: true, popupMode: 'buy' })
@@ -120,7 +138,7 @@ Page({
     wx.setStorageSync('buyNowItem', item)
     this.setData({ showVariantPopup: false })
     wx.navigateTo({
-      url: '/pages/order/order?mode=buyNow'
+      url: '/pages/checkout/checkout?mode=buyNow'
     })
   },
 

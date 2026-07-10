@@ -199,11 +199,26 @@ exports.main = async (event, context) => {
     // 生成签名
     unifiedParams.sign = generateSign(unifiedParams, CONFIG.api_key)
 
+    // 调试日志：打印签名参数和签名串
+    const sortedKeys = Object.keys(unifiedParams).sort()
+    let debugStr = ''
+    for (const k of sortedKeys) {
+      if (unifiedParams[k] !== '' && unifiedParams[k] !== undefined && unifiedParams[k] !== null && k !== 'sign') {
+        debugStr += `${k}=${unifiedParams[k]}&`
+      }
+    }
+    debugStr += `key=***（已隐藏）`
+    console.log('[pay] 签名串(排序后):', debugStr)
+    console.log('[pay] 密钥前4位:', CONFIG.api_key.substring(0, 4), '后4位:', CONFIG.api_key.substring(28))
+    console.log('[pay] sign:', unifiedParams.sign)
+
     // 调用统一下单API
     const unifiedResult = await unifiedOrder(unifiedParams)
 
+    console.log('[pay] 微信返回结果:', JSON.stringify(unifiedResult))
+
     if (unifiedResult.return_code !== 'SUCCESS') {
-      console.error('统一下单失败:', unifiedResult)
+      console.error('[pay] 统一下单失败:', unifiedResult)
       return {
         code: -1,
         message: '统一下单失败: ' + (unifiedResult.return_msg || '未知错误')

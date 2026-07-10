@@ -1,0 +1,10 @@
+{
+  "triggers": [
+    {
+      "name": "payNotify",
+      "type": "http",
+      "path": "/payNotify",
+      "methods": ["POST"]
+    }
+  ]
+}

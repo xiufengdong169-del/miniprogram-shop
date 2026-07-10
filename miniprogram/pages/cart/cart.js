@@ -127,7 +127,7 @@ Page({
     wx.setStorageSync('checkoutItems', selectedItems)
 
     wx.navigateTo({
-      url: '/pages/order/order?mode=cart'
+      url: '/pages/checkout/checkout?mode=cart'
     })
   },
 

@@ -19,39 +19,47 @@ Page({
     }
   },
 
-  // 加载订单详情
+  // 加载订单详情（通过云函数读取，不受数据库权限限制）
   async loadOrder(orderId) {
     this.setData({ loading: true })
 
     try {
-      const db = wx.cloud.database()
-      const result = await db.collection('orders').doc(orderId).get()
-
-      const order = result.data
-      const statusMap = {
-        0: { text: '待支付', color: '#f59e0b' },
-        1: { text: '已支付', color: '#16a34a' },
-        2: { text: '服务中', color: '#2563eb' },
-        3: { text: '已完成', color: '#64748b' },
-        4: { text: '已取消', color: '#94a3b8' },
-        5: { text: '已退款', color: '#dc2626' }
-      }
-      const statusInfo = statusMap[order.status] || { text: '未知', color: '#94a3b8' }
-
-      // 格式化时间
-      if (order.createTime) {
-        order.createTimeStr = formatDate(new Date(order.createTime))
-      }
-      if (order.payTime) {
-        order.payTimeStr = formatDate(new Date(order.payTime))
-      }
-
-      this.setData({
-        order,
-        loading: false,
-        statusText: statusInfo.text,
-        statusColor: statusInfo.color
+      const res = await wx.cloud.callFunction({
+        name: 'getOrderDetail',
+        data: { orderId }
       })
+
+      if (res.result && res.result.code === 0) {
+        const order = res.result.data
+        const statusMap = {
+          0: { text: '待支付', color: '#f59e0b' },
+          1: { text: '已支付', color: '#16a34a' },
+          2: { text: '服务中', color: '#2563eb' },
+          3: { text: '已完成', color: '#64748b' },
+          4: { text: '已取消', color: '#94a3b8' },
+          5: { text: '已退款', color: '#dc2626' }
+        }
+        const statusInfo = statusMap[order.status] || { text: '未知', color: '#94a3b8' }
+
+        // 格式化时间
+        if (order.createTime) {
+          order.createTimeStr = formatDate(new Date(order.createTime))
+        }
+        if (order.payTime) {
+          order.payTimeStr = formatDate(new Date(order.payTime))
+        }
+
+        this.setData({
+          order,
+          loading: false,
+          statusText: statusInfo.text,
+          statusColor: statusInfo.color
+        })
+      } else {
+        console.error('加载订单详情失败:', res.result)
+        this.setData({ loading: false })
+        showToast(res.result?.message || '订单加载失败')
+      }
     } catch (err) {
       console.error('加载订单详情失败:', err)
       this.setData({ loading: false })
@@ -106,7 +114,7 @@ Page({
     }
   },
 
-  // 取消订单
+  // 取消订单（通过云函数操作）
   onCancel() {
     wx.showModal({
       title: '提示',
@@ -114,15 +122,20 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           try {
-            const db = wx.cloud.database()
-            await db.collection('orders').doc(this.data.orderId).update({
+            const cancelRes = await wx.cloud.callFunction({
+              name: 'getOrderDetail',
               data: {
-                status: 4,
-                updateTime: db.serverDate()
+                orderId: this.data.orderId,
+                action: 'cancel'
               }
             })
-            showToast('订单已取消')
-            this.loadOrder(this.data.orderId)
+
+            if (cancelRes.result && cancelRes.result.code === 0) {
+              showToast('订单已取消')
+              this.loadOrder(this.data.orderId)
+            } else {
+              showToast('取消失败')
+            }
           } catch (err) {
             showToast('取消失败')
           }

@@ -1,21 +1,9 @@
-// pages/order/order.js
+// pages/checkout/checkout.js
 const app = getApp()
 const { formatPrice, generateOrderNo, showToast } = require('../../utils/util.js')
 
 Page({
   data: {
-    mode: 'list', // 'list' = 订单列表, 'checkout' = 下单确认
-    // 订单列表数据
-    orders: [],
-    activeTab: -1, // -1=全部, 0=待支付, 1=已支付, 2=服务中, 3=已完成
-    orderTabs: [
-      { status: -1, text: '全部' },
-      { status: 0, text: '待支付' },
-      { status: 1, text: '已支付' },
-      { status: 3, text: '已完成' }
-    ],
-    loadingList: true,
-    // 下单数据
     checkoutItems: [],
     totalAmount: 0,
     contactInfo: {
@@ -29,21 +17,8 @@ Page({
   },
 
   onLoad(options) {
-    if (options.mode) {
-      this.setData({ mode: 'checkout' })
-      this.initCheckout(options)
-    } else {
-      this.setData({ mode: 'list' })
-    }
+    this.initCheckout(options)
   },
-
-  onShow() {
-    if (this.data.mode === 'list') {
-      this.loadOrders()
-    }
-  },
-
-  // ============ 下单相关 ============
 
   // 初始化下单
   initCheckout(options) {
@@ -145,9 +120,16 @@ Page({
 
     try {
       // 确保openid已获取
-      await app.getOpenid()
+      const openid = await app.getOpenid()
+      console.log('[checkout] openid:', openid)
 
       // 调用云函数创建订单
+      console.log('[checkout] calling createOrder with items:', JSON.stringify(checkoutItems.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        variantName: item.variantName || ''
+      }))))
+
       const res = await wx.cloud.callFunction({
         name: 'createOrder',
         data: {
@@ -161,22 +143,31 @@ Page({
         }
       })
 
+      console.log('[checkout] createOrder result:', JSON.stringify(res.result))
+
       if (res.result && res.result.code === 0) {
         const orderId = res.result.data.orderId
         const isFree = res.result.data.totalAmount === 0
 
         // 如果是购物车来的，清除已下单的商品
-        if (this.data.mode === 'checkout') {
-          const checkoutItemIds = checkoutItems.map(item => item.id).filter(Boolean)
-          checkoutItemIds.forEach(id => app.removeFromCart(id))
-        }
+        const checkoutItemIds = checkoutItems.map(item => item.id).filter(Boolean)
+        checkoutItemIds.forEach(id => app.removeFromCart(id))
 
         // 清除临时存储
         wx.removeStorageSync('checkoutItems')
         wx.removeStorageSync('buyNowItem')
 
         if (isFree) {
-          // 免费商品，直接完成
+          // 免费商品：调用 pay 云函数自动确认（标记为已支付）
+          console.log('[checkout] free order, calling pay to confirm:', orderId)
+          try {
+            await wx.cloud.callFunction({
+              name: 'pay',
+              data: { orderId }
+            })
+          } catch (e) {
+            console.error('[checkout] free order confirm failed:', e)
+          }
           wx.showToast({ title: '提交成功', icon: 'success' })
           setTimeout(() => {
             wx.redirectTo({
@@ -189,12 +180,13 @@ Page({
         }
       } else {
         this.setData({ submitting: false })
+        console.error('[checkout] createOrder failed:', res.result)
         showToast(res.result?.message || '创建订单失败')
       }
     } catch (err) {
-      console.error('创建订单失败:', err)
+      console.error('[checkout] 创建订单异常:', err)
       this.setData({ submitting: false })
-      showToast('创建订单失败，请重试')
+      showToast('创建订单异常: ' + (err.message || '请重试'))
     }
   },
 
@@ -263,54 +255,5 @@ Page({
       this.setData({ submitting: false })
       showToast('支付服务异常')
     }
-  },
-
-  // ============ 订单列表相关 ============
-
-  // 加载订单列表（通过云函数读取，不受数据库权限限制）
-  async loadOrders() {
-    this.setData({ loadingList: true })
-
-    try {
-      const res = await wx.cloud.callFunction({
-        name: 'getOrders',
-        data: {
-          status: this.data.activeTab
-        }
-      })
-
-      if (res.result && res.result.code === 0) {
-        this.setData({
-          orders: res.result.data,
-          loadingList: false
-        })
-      } else {
-        console.error('加载订单列表失败:', res.result)
-        this.setData({ loadingList: false })
-      }
-    } catch (err) {
-      console.error('加载订单列表失败:', err)
-      this.setData({ loadingList: false })
-    }
-  },
-
-  // 切换订单状态tab
-  onTabTap(e) {
-    const status = e.currentTarget.dataset.status
-    this.setData({ activeTab: status })
-    this.loadOrders()
-  },
-
-  // 跳转订单详情
-  onOrderTap(e) {
-    const orderId = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/orderDetail/orderDetail?id=${orderId}`
-    })
-  },
-
-  // 去逛逛
-  goShopping() {
-    wx.switchTab({ url: '/pages/index/index' })
   }
 })

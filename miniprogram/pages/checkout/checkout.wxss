@@ -1,0 +1,206 @@
+/* pages/checkout/checkout.wxss */
+.page {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* 通用section */
+.section {
+  background: #fff;
+  margin: 16rpx 0;
+  padding: 28rpx 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid #2563eb;
+}
+
+/* 下单商品列表 */
+.checkout-item {
+  display: flex;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f1f5f9;
+}
+
+.checkout-item:last-child {
+  border-bottom: none;
+}
+
+.ci-image {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: #f1f5f9;
+}
+
+.ci-info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ci-name {
+  font-size: 28rpx;
+  color: #1e293b;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ci-variant {
+  font-size: 22rpx;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  align-self: flex-start;
+}
+
+.ci-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ci-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-symbol {
+  font-size: 22rpx;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.price-value {
+  font-size: 32rpx;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.free-text {
+  font-size: 28rpx;
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.ci-qty {
+  font-size: 26rpx;
+  color: #94a3b8;
+}
+
+/* 表单 */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f1f5f9;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1e293b;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  font-size: 28rpx;
+  color: #1e293b;
+  padding: 12rpx 0;
+}
+
+/* 金额汇总 */
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+  color: #475569;
+}
+
+.amount-row.total {
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f1f5f9;
+  margin-top: 8rpx;
+}
+
+.amount-value {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.amount-final {
+  display: flex;
+  align-items: baseline;
+}
+
+.amount-final-value {
+  font-size: 40rpx;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* 底部提交栏 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 110rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+.submit-total {
+  display: flex;
+  align-items: baseline;
+  margin-right: 24rpx;
+  font-size: 28rpx;
+  color: #1e293b;
+}
+
+.submit-amount {
+  font-size: 40rpx;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.submit-btn {
+  background: #2563eb;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 20rpx 56rpx;
+  border-radius: 44rpx;
+}
+
+.submit-btn.disabled {
+  opacity: 0.6;
+}

@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/detail/detail",
     "pages/cart/cart",
+    "pages/checkout/checkout",
     "pages/order/order",
     "pages/orderDetail/orderDetail",
     "pages/profile/profile"
@@ -48,5 +49,6 @@
   },
   "sitemapLocation": "sitemap.json",
   "cloud": true,
-  "style": "v2"
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
 }
