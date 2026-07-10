@@ -2,22 +2,38 @@
 <view class="page">
   <!-- 用户信息头部 -->
   <view class="user-header">
+    <!-- 已登录 -->
     <view class="user-info" wx:if="{{hasUserInfo}}">
-      <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/tab/profile.png'}}" mode="aspectFill" />
-      <view class="user-detail">
-        <view class="name-row">
-          <text class="user-name">{{userInfo.nickName}}</text>
-          <button wx:if="{{needUpdateProfile}}" class="update-btn" bindtap="onGetUserProfile">更新昵称</button>
+      <!-- 头像：点击选择微信头像 -->
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="user-avatar" src="{{userInfo.avatarUrl || '/images/tab/profile.png'}}" mode="aspectFill" />
+        <view class="avatar-edit-hint">
+          <text>换</text>
         </view>
-        <text class="user-id">名称: {{userInfo.nickName}}</text>
+      </button>
+      <view class="user-detail">
+        <!-- 昵称：用 input type=nickname 让用户填写 -->
+        <view class="name-row">
+          <input
+            class="nick-input"
+            type="nickname"
+            placeholder="点击设置昵称"
+            placeholder-class="nick-placeholder"
+            value="{{userInfo.nickName && userInfo.nickName !== '微信用户' ? userInfo.nickName : ''}}"
+            bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
+          />
+        </view>
+        <text class="user-id">{{userInfo.nickName && userInfo.nickName !== '微信用户' ? userInfo.nickName : '点击上方设置昵称'}}</text>
       </view>
     </view>
+    <!-- 未登录 -->
     <view class="user-info" wx:else>
       <view class="user-avatar default-avatar">
         <text>👤</text>
       </view>
       <view class="user-detail">
-        <button class="login-btn" bindtap="onGetUserProfile">
+        <button class="login-btn" bindtap="onLogin">
           点击登录
         </button>
         <text class="user-id">登录后享受更多服务</text>

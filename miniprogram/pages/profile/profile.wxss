@@ -30,6 +30,47 @@
   font-size: 56rpx;
 }
 
+/* 头像选择按钮 */
+.avatar-btn {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: transparent;
+  line-height: normal;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-btn .user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.avatar-edit-hint {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36rpx;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-edit-hint text {
+  color: #fff;
+  font-size: 20rpx;
+}
+
 .user-detail {
   margin-left: 24rpx;
   display: flex;
@@ -47,19 +88,21 @@
   color: #fff;
 }
 
-.update-btn {
-  margin-left: 16rpx;
-  background: rgba(255, 255, 255, 0.25);
+/* 昵称输入框 */
+.nick-input {
+  font-size: 36rpx;
+  font-weight: 700;
   color: #fff;
-  font-size: 22rpx;
-  padding: 6rpx 18rpx;
-  border-radius: 20rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.5);
-  line-height: 1.4;
+  border-bottom: 2rpx solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 4rpx;
+  min-width: 300rpx;
+  max-width: 400rpx;
 }
 
-.update-btn::after {
-  border: none;
+.nick-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+  font-size: 28rpx;
 }
 
 .user-id {
