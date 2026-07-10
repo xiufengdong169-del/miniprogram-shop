@@ -235,7 +235,7 @@ const products = [
     supportInvoice: true,
     variants: [],
     sortOrder: 8,
-    onShelf: true,
+    onShelf: false,
     isFree: true
   },
   {
