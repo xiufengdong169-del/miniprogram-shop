@@ -20,41 +20,11 @@ Page({
     this.setData({ cartCount: app.getCartCount() })
   },
 
-  // 加载商品列表
+  // 加载商品列表（直接读本地 products.js，改完文件编译即生效）
   loadProducts() {
     this.setData({ loading: true })
-
-    wx.cloud.callFunction({
-      name: 'getProducts',
-      data: {
-        category: this.data.activeCategory,
-        onShelfOnly: true
-      }
-    }).then(res => {
-      if (res.result && res.result.code === 0) {
-        let products = res.result.data || []
-        // 云数据库返回空时，fallback 到本地数据（通常是云数据库未初始化或分类未同步）
-        if (products.length === 0) {
-          products = this.getLocalProducts()
-          if (products.length > 0) {
-            console.warn('[首页] 云数据库未返回商品，已使用本地兜底数据')
-          }
-        }
-        this.setData({
-          products,
-          loading: false
-        })
-      } else {
-        this.setData({ loading: false })
-        wx.showToast({ title: '加载失败', icon: 'none' })
-      }
-    }).catch(err => {
-      console.error('加载商品失败:', err)
-      this.setData({ loading: false })
-
-      // 云函数未部署时使用本地模拟数据
-      this.loadLocalProducts()
-    })
+    const products = this.getLocalProducts()
+    this.setData({ products, loading: false })
   },
 
   // 获取本地过滤后的商品数据
@@ -66,11 +36,6 @@ Page({
     }
     filtered.sort((a, b) => a.sortOrder - b.sortOrder)
     return filtered
-  },
-
-  // 本地模拟数据（开发阶段使用）
-  loadLocalProducts() {
-    this.setData({ products: this.getLocalProducts(), loading: false })
   },
 
   // 切换分类

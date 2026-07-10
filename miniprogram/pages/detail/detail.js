@@ -23,29 +23,10 @@ Page({
     this.setData({ cartCount: app.getCartCount() })
   },
 
-  // 加载商品详情
+  // 加载商品详情（直接读本地 products.js，改完文件编译即生效）
   loadProduct(id) {
     this.setData({ loading: true })
-
-    wx.cloud.callFunction({
-      name: 'getProductDetail',
-      data: { productId: id }
-    }).then(res => {
-      if (res.result && res.result.code === 0) {
-        this.setData({
-          product: res.result.data,
-          loading: false
-        })
-        wx.setNavigationBarTitle({ title: res.result.data.shortTitle || '商品详情' })
-      } else {
-        this.setData({ loading: false })
-        wx.showToast({ title: '商品不存在', icon: 'none' })
-      }
-    }).catch(err => {
-      console.error('加载商品详情失败:', err)
-      // 本地数据兜底
-      this.loadLocalProduct(id)
-    })
+    this.loadLocalProduct(id)
   },
 
   // 本地数据兜底
