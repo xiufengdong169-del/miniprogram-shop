@@ -141,8 +141,5 @@ Page({
     })
   },
 
-  // 联系客服
-  onContactService() {
-    wx.showToast({ title: '请联系客服微信', icon: 'none' })
-  }
+  // 联系客服 — 已改为 button open-type="contact" 原生接入
 })

@@ -195,6 +195,16 @@
   opacity: 0.6;
 }
 
+/* 联系客服按钮重置 */
+.contact-btn {
+  line-height: normal;
+  margin: 0;
+}
+
+.contact-btn::after {
+  border: none;
+}
+
 /* 加载状态 */
 .loading-state {
   display: flex;

@@ -18,13 +18,15 @@
   padding: 24rpx;
   margin-bottom: 16rpx;
   position: relative;
+  border: 2rpx solid transparent;
+  transition: all 0.2s;
 }
 
 /* 选中框 */
 .check-box {
-  width: 40rpx;
-  height: 40rpx;
-  border: 2rpx solid #cbd5e1;
+  width: 44rpx;
+  height: 44rpx;
+  border: 3rpx solid #cbd5e1;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -32,6 +34,7 @@
   flex-shrink: 0;
   margin-right: 20rpx;
   transition: all 0.2s;
+  background: #fff;
 }
 
 .check-box.checked {
@@ -41,11 +44,17 @@
 
 .check-icon {
   color: #fff;
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 700;
+  line-height: 1;
 }
 
 /* 商品图 */
+.image-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .item-image {
   width: 160rpx;
   height: 160rpx;
@@ -137,7 +146,25 @@
   font-weight: 600;
 }
 
-/* 删除按钮 */
+.cart-item.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.12);
+}
+
+/* 已选中标签 */
+.selected-tag {
+  position: absolute;
+  right: 8rpx;
+  top: 8rpx;
+  background: #2563eb;
+  color: #fff;
+  font-size: 18rpx;
+  padding: 4rpx 10rpx;
+  border-radius: 20rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(37, 99, 235, 0.3);
+}
 .item-delete {
   position: absolute;
   right: 24rpx;
@@ -153,7 +180,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 110rpx;
+  height: 140rpx;
   background: #fff;
   display: flex;
   align-items: center;
@@ -173,12 +200,27 @@
   margin-left: 12rpx;
 }
 
-.total-info {
+.total-wrap {
   flex: 1;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 20rpx;
+}
+
+.selected-summary {
+  font-size: 22rpx;
+  color: #64748b;
+  margin-bottom: 4rpx;
+  max-width: 360rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.total-info {
+  display: flex;
   align-items: baseline;
-  justify-content: flex-end;
-  margin-right: 24rpx;
 }
 
 .total-label {
@@ -199,6 +241,10 @@
   font-weight: 600;
   padding: 20rpx 56rpx;
   border-radius: 44rpx;
+}
+
+.checkout-btn.disabled {
+  background: #cbd5e1;
 }
 
 /* 空购物车 */

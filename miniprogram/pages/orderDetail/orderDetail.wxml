@@ -98,9 +98,9 @@
   </view>
 
   <view class="action-bar" wx:elif="{{order.status === 1 || order.status === 2 || order.status === 3}}">
-    <view class="action-btn outline" bindtap="onContactService">
+    <button class="action-btn outline contact-btn" open-type="contact" sessionFrom="orderDetail">
       <text>联系客服</text>
-    </view>
+    </button>
   </view>
 </view>
 

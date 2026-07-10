@@ -5,6 +5,7 @@ Page({
   data: {
     userInfo: null,
     hasUserInfo: false,
+    needUpdateProfile: false,
     openid: '',
     orderStats: {
       pending: 0,
@@ -31,12 +32,14 @@ Page({
         const result = await db.collection('users').where({ openid }).get()
         if (result.data.length > 0) {
           const user = result.data[0]
+          const userInfo = {
+            nickName: user.nickName || '数乘用户',
+            avatarUrl: user.avatarUrl || ''
+          }
           this.setData({
-            userInfo: {
-              nickName: user.nickName || '数乘用户',
-              avatarUrl: user.avatarUrl || ''
-            },
-            hasUserInfo: true
+            userInfo,
+            hasUserInfo: true,
+            needUpdateProfile: !user.nickName || user.nickName === '微信用户'
           })
         }
       } catch (e) {
@@ -73,23 +76,36 @@ Page({
     }
   },
 
-  // 获取微信用户信息
-  onGetUserInfo(e) {
-    if (e.detail.userInfo) {
-      this.setData({
-        userInfo: e.detail.userInfo,
-        hasUserInfo: true
-      })
+  // 获取微信用户信息（使用 getUserProfile 获取真实昵称）
+  onGetUserProfile() {
+    wx.getUserProfile({
+      desc: '用于完善用户资料',
+      success: (res) => {
+        const userInfo = res.userInfo
+        this.setData({
+          userInfo,
+          hasUserInfo: true,
+          needUpdateProfile: !userInfo.nickName || userInfo.nickName === '微信用户'
+        })
 
-      // 更新到云数据库
-      wx.cloud.callFunction({
-        name: 'login',
-        data: {
-          nickName: e.detail.userInfo.nickName,
-          avatarUrl: e.detail.userInfo.avatarUrl
-        }
-      })
-    }
+        // 更新到云数据库
+        wx.cloud.callFunction({
+          name: 'login',
+          data: {
+            nickName: userInfo.nickName,
+            avatarUrl: userInfo.avatarUrl
+          },
+          success: () => {
+            // 更新成功后重新加载，确保本地显示与数据库一致
+            this.loadUserInfo()
+          }
+        })
+      },
+      fail: (err) => {
+        console.error('获取用户资料失败:', err)
+        wx.showToast({ title: '授权失败，请重试', icon: 'none' })
+      }
+    })
   },
 
   // 跳转订单列表
@@ -109,14 +125,6 @@ Page({
         break
       case 'cart':
         wx.switchTab({ url: '/pages/cart/cart' })
-        break
-      case 'contact':
-        wx.showModal({
-          title: '联系客服',
-          content: '客服微信号：shucheng-service\n电话：400-xxx-xxxx',
-          showCancel: false,
-          confirmText: '知道了'
-        })
         break
       case 'about':
         wx.showModal({

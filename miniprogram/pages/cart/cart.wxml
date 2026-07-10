@@ -3,7 +3,7 @@
   <!-- 购物车列表 -->
   <block wx:if="{{cartItems.length > 0}}">
     <view class="cart-list">
-      <view class="cart-item" wx:for="{{cartItems}}" wx:key="id">
+      <view class="cart-item {{selectedIds.indexOf(item.id) > -1 ? 'selected' : ''}}" wx:for="{{cartItems}}" wx:key="id">
         <!-- 选中框 -->
         <view
           class="check-box {{selectedIds.indexOf(item.id) > -1 ? 'checked' : ''}}"
@@ -14,11 +14,14 @@
         </view>
 
         <!-- 商品图 -->
-        <image
-          class="item-image"
-          src="{{item.image || '/images/placeholder.png'}}"
-          mode="aspectFill"
-        />
+        <view class="image-wrap">
+          <image
+            class="item-image"
+            src="{{item.image || '/images/placeholder.png'}}"
+            mode="aspectFill"
+          />
+          <view wx:if="{{selectedIds.indexOf(item.id) > -1}}" class="selected-tag">已选中</view>
+        </view>
 
         <!-- 商品信息 -->
         <view class="item-info">
@@ -61,12 +64,17 @@
         </view>
         <text class="check-all-text">全选</text>
       </view>
-      <view class="total-info">
-        <text class="total-label">合计：</text>
-        <text class="price-symbol">¥</text>
-        <text class="total-amount">{{totalAmount / 100}}</text>
+      <view class="total-wrap">
+        <view class="selected-summary" wx:if="{{selectedSummary}}">
+          <text>{{selectedSummary}}</text>
+        </view>
+        <view class="total-info">
+          <text class="total-label">合计：</text>
+          <text class="price-symbol">¥</text>
+          <text class="total-amount">{{totalAmount / 100}}</text>
+        </view>
       </view>
-      <view class="checkout-btn" bindtap="onCheckout">
+      <view class="checkout-btn {{totalCount === 0 ? 'disabled' : ''}}" bindtap="onCheckout">
         <text>结算{{totalCount > 0 ? '(' + totalCount + ')' : ''}}</text>
       </view>
     </view>
@@ -82,5 +90,5 @@
   </view>
 
   <!-- 底部占位 -->
-  <view wx:if="{{cartItems.length > 0}}" style="height: 120rpx;"></view>
+  <view wx:if="{{cartItems.length > 0}}" style="height: 160rpx;"></view>
 </view>

@@ -18,23 +18,28 @@ Page({
   // 刷新购物车数据
   refreshCart() {
     const cart = app.globalData.cart
-    const totalAmount = cart
-      .filter(item => this.data.selectedIds.indexOf(item.id) > -1 || this.data.isAllSelected)
-      .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    const totalCount = cart
-      .filter(item => this.data.selectedIds.indexOf(item.id) > -1 || this.data.isAllSelected)
-      .reduce((sum, item) => sum + item.quantity, 0)
-
-    // 初始化选中状态
     const selectedIds = this.data.selectedIds.length === 0 && this.data.isAllSelected
       ? cart.map(item => item.id)
-      : this.data.selectedIds
+      : [...this.data.selectedIds]
+
+    const selectedItems = cart.filter(item => selectedIds.indexOf(item.id) > -1)
+    const totalAmount = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const totalCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
+
+    // 已选商品摘要
+    let selectedSummary = ''
+    if (selectedItems.length > 0) {
+      const names = selectedItems.map(item => item.shortTitle || item.name)
+      selectedSummary = `已选 ${selectedItems.length} 件：${names.join('、')}`
+    }
 
     this.setData({
       cartItems: cart,
       totalAmount,
       totalCount,
-      selectedIds
+      selectedIds,
+      isAllSelected: selectedIds.length === cart.length && cart.length > 0,
+      selectedSummary
     })
   },
 
